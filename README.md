@@ -35,8 +35,12 @@ node --test content.test.mjs
 
 ## Retrato
 
-El espacio del retrato admite una imagen local mediante `portraitSrc` en `render.js`. Con un archivo en `assets/`, establece la ruta y regenera el HTML. El encuadre se realiza con CSS y no altera el archivo original.
+El retrato se encuentra en `assets/emilio-zarinan.jpg` y se configura mediante `portraitSrc` en `render.js`. El encuadre se realiza con CSS y no altera el archivo original.
 
 ## Publicación
 
 GitHub Pages desde la rama `main`, carpeta raíz (`/`). No requiere compilación en el servidor, API de traducción, rastreadores ni servicios externos.
+
+## Archivos versionados
+
+El generador escribe CSS y módulos JavaScript con una huella de su contenido dentro de `assets/`. El HTML referencia esos nombres para evitar mezclar una versión nueva de la página con estilos o scripts antiguos guardados en caché. Después de editar los archivos fuente, ejecuta `node scripts/build.mjs` y sube también los archivos generados.
