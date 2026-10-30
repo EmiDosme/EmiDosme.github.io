@@ -26,3 +26,7 @@ La página todavía debe publicarse: crear estos archivos localmente no activa G
 Se conserva el usuario GitHub EmiDosme. El nombre público del sitio es Emilio Zariñan y el nombre completo figura en la información profesional y el pie. La URL de GitHub Pages seguirá siendo https://emidosme.github.io/; el nombre visible y el usuario son independientes.
 
 La versión actual incorpora resultados del resumen facilitado por Emilio: ahorro semanal conjunto mínimo estimado de 5.25 h en una muestra comparable de 10 participantes de la solución de capacitaciones, y rango de 2.75–5.75 h en una muestra de 6 participantes de la solución comercial. Se trata de estimaciones declaradas en encuestas, no tiempos cronometrados. Las encuestas originales no se verificaron de forma independiente. No se publican las proyecciones anuales, las extrapolaciones a la población potencial ni un total de usuarios activos únicos. Los adjuntos originales y sus nombres internos no se distribuyen en este paquete.
+
+## Diseño y contenido actualizados
+
+La web usa una paleta verde oscura permanente, tipografía de tamaño moderado, encabezado compacto y descripciones breves. Los resultados de impacto y los detalles de proyectos se consultan bajo demanda. Calcucripto se retiró del contenido a petición de Emilio. Se incluye el uso de asistentes de IA como apoyo al desarrollo, depuración y documentación, con revisión y comprobación de las propuestas; no se añaden certificaciones ni niveles de especialización no aportados. El formato de impresión conserva un fondo claro para papel o PDF.
