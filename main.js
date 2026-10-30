@@ -1,53 +1,15 @@
-const email='emiliozarinangomez@gmail.com';
-document.querySelector('#year').textContent=new Date().getFullYear();
-const copyButton=document.querySelector('#copy-email');
-if(navigator.clipboard&&window.isSecureContext){copyButton.hidden=false;copyButton.addEventListener('click',async()=>{const status=document.querySelector('#copy-status');try{await navigator.clipboard.writeText(email);status.textContent='Correo copiado. ¡Gracias por conectar!';}catch{status.textContent='No fue posible copiarlo. Puedes seleccionar el correo o abrirlo para escribir un mensaje.';}});}
-
-// Explorar proyectos sin perder la posición de lectura.
-const projectCards=[...document.querySelectorAll('.project-card')];
-const filterButtons=[...document.querySelectorAll('[data-filter]')];
-const toolbar=document.querySelector('.project-toolbar');
-const expandButton=document.querySelector('#expand-projects');
-const visibleProjectDetails=()=>projectCards.filter(card=>!card.hidden).flatMap(card=>[...card.querySelectorAll('details')]);
-function syncExpandButton(){const details=visibleProjectDetails();expandButton.disabled=details.length===0;expandButton.textContent=details.length&&details.every(item=>item.open)?'Cerrar detalles':'Abrir detalles';}
-function filterProjects(category){
- filterButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.filter===category)));
- projectCards.forEach(card=>{card.hidden=category!=='all'&&!card.dataset.categories.split(' ').includes(category);});
- const count=projectCards.filter(card=>!card.hidden).length;
- document.querySelector('#project-count').textContent=`${count} ${count===1?'proyecto':'proyectos'}${category==='all'?' en total':' en esta categoría'}`;
- syncExpandButton();
-}
-if(toolbar){toolbar.hidden=false;filterButtons.forEach(button=>button.addEventListener('click',()=>filterProjects(button.dataset.filter)));
-expandButton.addEventListener('click',()=>{const details=visibleProjectDetails(),open=!details.every(item=>item.open);details.forEach(item=>item.open=open);syncExpandButton();});
-projectCards.forEach(card=>card.querySelectorAll('details').forEach(item=>item.addEventListener('toggle',syncExpandButton)));
-document.querySelectorAll('[data-project-jump]').forEach(link=>link.addEventListener('click',()=>filterProjects(link.dataset.projectJump)));filterProjects('all');}
-
-const workflow=[
- {title:'Entender antes de desarrollar.',description:'Identificar a los usuarios, el proceso actual y la información necesaria para definir una solución útil.',from:'Necesidad',to:'Requerimientos',tools:['Análisis de negocio','Requerimientos']},
- {title:'Convertir el proceso en una aplicación.',description:'Estructurar la captura de información, diseñar pantallas y desarrollar funciones para las tareas de cada usuario.',from:'Proceso',to:'Aplicación',tools:['Power Apps','Desarrollo web','Apoyo de IA']},
- {title:'Hacer que la información fluya.',description:'Conectar aplicaciones, listas y correos para automatizar tareas y dar visibilidad mediante reportes.',from:'Aplicación',to:'Flujos y datos',tools:['Power Automate','SharePoint','Power BI']},
- {title:'Validar, escuchar y mejorar.',description:'Comprobar el funcionamiento, revisar la experiencia de los usuarios y mantener las conexiones para dar continuidad a las soluciones.',from:'Resultados',to:'Mejora continua',tools:['Validación','Encuestas','Solutions']}
-];
-const workflowButtons=[...document.querySelectorAll('[data-workflow]')];
-document.querySelector('.workflow-options').hidden=false;
-workflowButtons.forEach(button=>button.addEventListener('click',()=>{
- const index=Number(button.dataset.workflow),step=workflow[index],display=document.querySelector('.workflow-display');
- workflowButtons.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
- document.querySelectorAll('[data-node]').forEach(node=>node.classList.toggle('is-active',Number(node.dataset.node)===index));
- display.querySelector('h3').textContent=step.title;display.querySelector('p').textContent=step.description;
- const nodes=display.querySelectorAll('.flow-map span');nodes[0].textContent=step.from;nodes[1].textContent=step.to;
- display.querySelector('.workflow-tools').replaceChildren(...step.tools.map(tool=>{const span=document.createElement('span');span.textContent=tool;return span;}));
-}));
-
-// Navegación contextual y progreso sin animaciones que interrumpan la lectura.
-const navLinks=[...document.querySelectorAll('nav a[href^="#"]')];
-const sectionIds=['inicio',...navLinks.map(link=>link.hash.slice(1))];
-const progress=document.querySelector('.reading-progress span');
-let scrollScheduled=false;
-function updateReading(){const offset=Math.min(180,window.innerHeight*.3);let current='inicio';for(const id of sectionIds){const section=document.getElementById(id);if(section&&section.getBoundingClientRect().top<=offset)current=id;}
-navLinks.forEach(link=>{if(link.hash===`#${current}`)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});
-const max=document.documentElement.scrollHeight-window.innerHeight;progress.style.width=`${max>0?Math.min(100,Math.max(0,window.scrollY/max*100)):0}%`;scrollScheduled=false;}
-window.addEventListener('scroll',()=>{if(!scrollScheduled){scrollScheduled=true;window.requestAnimationFrame(updateReading);}},{passive:true});window.addEventListener('resize',updateReading);updateReading();
-
-
-document.querySelector('[data-node="0"]').classList.add('is-active');
+import {content} from './content.js';
+import {renderPage,renderProject,email} from './render.js';
+const app=document.querySelector('#app');
+let language='es',category='all',selectedId='training';
+try{if(localStorage.getItem('emilio-language')==='en')language='en';}catch{}
+let scrollScheduled=false,cleanup=[];
+const listen=(target,event,handler,options)=>{target.addEventListener(event,handler,options);cleanup.push(()=>target.removeEventListener(event,handler,options));};
+function items(){return content[language].projects.items.filter(item=>category==='all'||item.category.includes(category));}
+function showProject(id,focus=false){const t=content[language],list=items();let index=list.findIndex(item=>item.id===id);if(index<0)index=0;const project=list[index];selectedId=project.id;document.querySelectorAll('[data-project]').forEach(button=>{button.hidden=!list.some(item=>item.id===button.dataset.project);button.setAttribute('aria-pressed',String(button.dataset.project===selectedId));});const panel=document.querySelector('#case-panel');panel.innerHTML=renderProject(t,project,index,list.length);panel.setAttribute('aria-label',project.name);panel.querySelector('.case-pager').hidden=false;panel.querySelector('[data-case-prev]').onclick=()=>showProject(list[index-1].id,true);panel.querySelector('[data-case-next]').onclick=()=>showProject(list[index+1].id,true);if(focus)panel.focus({preventScroll:true});}
+function applyFilter(next){category=next;const t=content[language],list=items();document.querySelectorAll('[data-filter]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.filter===category)));document.querySelector('.project-count').textContent=`${list.length} ${list.length===1?t.projects.countOne:t.projects.count}`;showProject(list.some(item=>item.id===selectedId)?selectedId:list[0].id);}
+function updateReading(){const offset=Math.min(window.innerHeight*.32,250);let current='inicio';document.querySelectorAll('[data-chapter]').forEach(section=>{if(section.getBoundingClientRect().top<=offset)current=section.id;});document.querySelectorAll('nav a,.chapter-dock a').forEach(link=>{if(link.hash===`#${current}`)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});const max=document.documentElement.scrollHeight-window.innerHeight;document.querySelector('.reading-progress span').style.width=`${max>0?Math.max(0,Math.min(100,window.scrollY/max*100)):0}%`;let active=0;document.querySelectorAll('[data-timeline]').forEach(item=>{if(item.getBoundingClientRect().top<=window.innerHeight*.55)active=Number(item.dataset.timeline);item.classList.remove('is-current');});const selected=document.querySelector(`[data-timeline="${active}"]`);selected.classList.add('is-current');document.querySelector('.marker-index').textContent=String(active+1).padStart(2,'0');document.querySelector('.marker-title').textContent=content[language].journey.timeline[active].role;scrollScheduled=false;}
+function setup(){const t=content[language];document.querySelector('#language-toggle').hidden=false;document.querySelector('.project-filters').hidden=false;document.querySelector('.project-index').hidden=false;document.documentElement.lang=language;document.title=t.title;document.querySelector('meta[name="description"]').content=t.description;document.querySelector('#language-toggle').onclick=()=>{const hash=location.hash;language=language==='es'?'en':'es';try{localStorage.setItem('emilio-language',language);}catch{}render();document.querySelector('#language-toggle').focus({preventScroll:true});if(hash)document.getElementById(hash.slice(1))?.scrollIntoView({behavior:'instant'});document.querySelector('#language-status').textContent=language==='en'?'Language changed to English.':'Idioma cambiado a español.';};document.querySelectorAll('[data-filter]').forEach(button=>button.onclick=()=>applyFilter(button.dataset.filter));document.querySelectorAll('[data-project]').forEach(button=>button.onclick=()=>showProject(button.dataset.project));applyFilter(category);const copy=document.querySelector('#copy-email');if(navigator.clipboard&&window.isSecureContext){copy.hidden=false;copy.onclick=async()=>{const status=document.querySelector('#copy-status');try{await navigator.clipboard.writeText(email);if(status.isConnected)status.textContent=t.contactSection.copied;}catch{if(status.isConnected)status.textContent=t.contactSection.copyFailed;}};}
+listen(window,'scroll',()=>{if(!scrollScheduled){scrollScheduled=true;window.requestAnimationFrame(updateReading);}},{passive:true});listen(window,'resize',updateReading);updateReading();}
+function render(){cleanup.forEach(fn=>fn());cleanup=[];app.innerHTML=renderPage(language);setup();}
+if(language==='es'&&app.querySelector('.hero'))setup();else render();

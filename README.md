@@ -1,22 +1,42 @@
-# Emilio Zariñan — portafolio
+# Emilio Zariñan — un recorrido por mi experiencia
 
 [Visitar el sitio](https://emidosme.github.io/)
 
-Ingeniería en Sistemas Computacionales · Desarrollo de software · Microsoft Power Platform · Automatización y datos.
+Un portafolio bilingüe que conecta formación, experiencia, proyectos y habilidades profesionales a través de cuatro capítulos. Diseño en azul nocturno con acentos suaves, navegación contextual y lectura al ritmo del visitante.
 
 ## Explorar
 
-- Mapa interactivo del proceso de trabajo y conexiones entre sus etapas.
-- Proyectos filtrables por aplicaciones, automatización, datos y software.
-- Experiencia en Vantive, proyectos académicos y desarrollo freelance.
-- Encuestas con usuarios del sistema, participantes y resultados.
-- Formación, herramientas y desarrollo asistido por IA.
+- Español e inglés completos, con preferencia de idioma guardada en el navegador.
+- Trayectoria desde ESCOM–IPN hasta los proyectos en Vantive.
+- Seis casos de proyecto: reto, participación, resultados y herramientas.
+- Encuestas con usuarios, participantes y resultados.
+- Diez habilidades profesionales, seis grupos de conocimientos e IA como apoyo.
 - Contacto por correo electrónico.
+
+La navegación no fuerza el desplazamiento. Los controles funcionan por teclado y se respeta la preferencia de movimiento reducido. El contenido inicial en español está incluido en el HTML y los otros casos también tienen una alternativa sin JavaScript.
 
 ## Desarrollo local
 
-Abre `index.html` o ejecuta `python3 -m http.server 8080` desde esta carpeta. HTML, CSS y JavaScript sin dependencias. El contenido y los detalles de proyectos siguen disponibles sin JavaScript.
+```sh
+python3 -m http.server 8080
+```
+
+Abre la dirección local que indique el servidor. No se requieren dependencias de JavaScript. Para actualizar el HTML después de editar los textos o las plantillas, utiliza Node.js:
+
+```sh
+node scripts/build.mjs
+node --test content.test.mjs
+```
+
+- `content.js`: textos en ambos idiomas.
+- `render.js`: plantillas y configuración de retrato.
+- `main.js`: idioma, casos de proyecto y orientación durante la lectura.
+- `style.css`: diseño adaptable y paleta.
+
+## Retrato
+
+El espacio del retrato admite una imagen local mediante `portraitSrc` en `render.js`. Con un archivo en `assets/`, establece la ruta y regenera el HTML. El encuadre se realiza con CSS y no altera el archivo original.
 
 ## Publicación
 
-GitHub Pages desde la rama `main`, carpeta raíz (`/`). No requiere compilación ni servicios externos.
+GitHub Pages desde la rama `main`, carpeta raíz (`/`). No requiere compilación en el servidor, API de traducción, rastreadores ni servicios externos.
