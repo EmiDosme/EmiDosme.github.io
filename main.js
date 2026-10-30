@@ -1,6 +1,5 @@
 const email='emiliozarinangomez@gmail.com';
 document.querySelector('#year').textContent=new Date().getFullYear();
-const printButton=document.querySelector('#print-cv');printButton.hidden=false;printButton.addEventListener('click',()=>window.print());
 const copyButton=document.querySelector('#copy-email');
 if(navigator.clipboard&&window.isSecureContext){copyButton.hidden=false;copyButton.addEventListener('click',async()=>{const status=document.querySelector('#copy-status');try{await navigator.clipboard.writeText(email);status.textContent='Correo copiado. ¡Gracias por conectar!';}catch{status.textContent='No fue posible copiarlo. Puedes seleccionar el correo o abrirlo para escribir un mensaje.';}});}
 
@@ -34,6 +33,7 @@ document.querySelector('.workflow-options').hidden=false;
 workflowButtons.forEach(button=>button.addEventListener('click',()=>{
  const index=Number(button.dataset.workflow),step=workflow[index],display=document.querySelector('.workflow-display');
  workflowButtons.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+ document.querySelectorAll('[data-node]').forEach(node=>node.classList.toggle('is-active',Number(node.dataset.node)===index));
  display.querySelector('h3').textContent=step.title;display.querySelector('p').textContent=step.description;
  const nodes=display.querySelectorAll('.flow-map span');nodes[0].textContent=step.from;nodes[1].textContent=step.to;
  display.querySelector('.workflow-tools').replaceChildren(...step.tools.map(tool=>{const span=document.createElement('span');span.textContent=tool;return span;}));
@@ -49,6 +49,5 @@ navLinks.forEach(link=>{if(link.hash===`#${current}`)link.setAttribute('aria-cur
 const max=document.documentElement.scrollHeight-window.innerHeight;progress.style.width=`${max>0?Math.min(100,Math.max(0,window.scrollY/max*100)):0}%`;scrollScheduled=false;}
 window.addEventListener('scroll',()=>{if(!scrollScheduled){scrollScheduled=true;window.requestAnimationFrame(updateReading);}},{passive:true});window.addEventListener('resize',updateReading);updateReading();
 
-// Los filtros no ocultan contenido en el PDF.
-window.addEventListener('beforeprint',()=>{document.querySelectorAll('.project-card[hidden]').forEach(card=>card.dataset.printHidden='true');projectCards.forEach(card=>card.hidden=false);});
-window.addEventListener('afterprint',()=>{document.querySelectorAll('[data-print-hidden]').forEach(card=>{card.hidden=true;delete card.dataset.printHidden;});});
+
+document.querySelector('[data-node="0"]').classList.add('is-active');

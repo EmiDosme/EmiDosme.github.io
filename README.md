@@ -1,21 +1,21 @@
-# Emilio Zariñan — portafolio y CV
+# Emilio Zariñan — portafolio
 
 [Visitar el sitio](https://emidosme.github.io/)
 
-Desarrollo de software, Microsoft Power Platform, automatización y análisis de datos. Experiencia profesional en Vantive, trabajo freelance y proyectos académicos de ESCOM–IPN.
+Ingeniería en Sistemas Computacionales · Desarrollo de software · Microsoft Power Platform · Automatización y datos.
 
 ## Explorar
 
+- Mapa interactivo del proceso de trabajo y conexiones entre sus etapas.
 - Proyectos filtrables por aplicaciones, automatización, datos y software.
-- Recorrido interactivo del proceso de trabajo: entender, construir, conectar y mejorar.
-- Experiencia, resultados, formación, idiomas y herramientas.
-- Impresión o exportación a PDF desde el navegador.
-
-Los resultados de ahorro de tiempo son estimaciones conjuntas basadas en encuestas, con sus muestras y alcance indicados en el sitio.
+- Experiencia en Vantive, proyectos académicos y desarrollo freelance.
+- Encuestas con usuarios del sistema, participantes y resultados.
+- Formación, herramientas y desarrollo asistido por IA.
+- Contacto por correo electrónico.
 
 ## Desarrollo local
 
-Abre `index.html` o ejecuta `python3 -m http.server 8080` desde esta carpeta. HTML, CSS y JavaScript sin dependencias. Sin JavaScript siguen disponibles el contenido, la navegación y los detalles de los proyectos.
+Abre `index.html` o ejecuta `python3 -m http.server 8080` desde esta carpeta. HTML, CSS y JavaScript sin dependencias. El contenido y los detalles de proyectos siguen disponibles sin JavaScript.
 
 ## Publicación
 
